@@ -10,6 +10,8 @@ import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.List;
@@ -104,13 +106,16 @@ public class ServletAgregarPuntoVenta extends HttpServlet{
             throw new Exception();                //en caso de no encontrar lanzo excepction
         }
         
-        
+        DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");  
+        LocalDateTime now = LocalDateTime.now();
         
         Part archivo = request.getPart("imagen");
-        String fileName = archivo.getSubmittedFileName();
+        Usuario usr = (Usuario) sess.getAttribute("logged");
+        String fileName = "IMGPVENTA"+usr.getIdUsuario()+dtf.format(now)+archivo.getSubmittedFileName().substring(archivo.getSubmittedFileName().lastIndexOf("."));
+        /*String fileName = archivo.getSubmittedFileName();*/
         InputStream is = archivo.getInputStream();
         
-        //Este Archivo al momento de correr las 2 applicaciones debe ser uno en comun    "C:/Users/carua/Desktop/apps proyectos/DeliveryAdministracion 28-09-2021/DeliveryAdministracion/src/main/webapp/files/"
+        //Este Archivo al momento de correr las 2 applicaciones debe ser uno en comun
         
         
         Path p = Paths.get(this.getServletContext().getRealPath(""));
@@ -128,41 +133,19 @@ public class ServletAgregarPuntoVenta extends HttpServlet{
             is.close();
         
         
-        
-        //Doy un formato al date e instancio el calendar
-        //--DateFormat dateFormat = new SimpleDateFormat("HH:mm:ss"); 
-        //--Calendar c = Calendar.getInstance();
-        
         //Obtengo el parametro y le agrego los segundos
         String horaIni = request.getParameter("horaInicio");   
         String horaIn = horaIni +":00";  
-        //--Date hI = dateFormat.parse(horaIn);
- 
-        //Le resto 3 Horas por el cambio de horario
-        //--c.setTime(hI);
-        //--c.add(Calendar.HOUR, -3);
-        //--Date horaInicio = c.getTime();       
-            
-        
         //Obtengo el parametro y le agrego los segundos
         String horaF = request.getParameter("horaFin");   
         String horaFi = horaF +":00";
-        //--Date hF = dateFormat.parse(horaFi);
- 
-        //Le resto 3 Horas por el cambio de horario
-        //--c.setTime(hF);
-        //--c.add(Calendar.HOUR, -3);
-        //--Date horaFin = c.getTime();
 
-        
         //---------------- INSTANCIANDO LOS OBJETOS ---------------------
         PuntoVenta pv = new PuntoVenta();
 
         pv.setNombre(nombre);
         pv.setEmpresa(empresa);
         pv.setImagen(fileName);
-        //--pv.setHoraInicio(horaInicio);
-        //--pv.setHoraFin(horaFin);
         pv.setHoraInicio(horaIn);
         pv.setHoraFin(horaFi);
         pv.setActivo(activo);

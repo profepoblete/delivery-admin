@@ -135,155 +135,146 @@ public class ServletModificarUsuario extends HttpServlet {
         if (modificar != null) {
 
             //----------------- CAPTURANDO LOS PARAMETROS OBTENIDOS ------------------------------
-            String rut = request.getParameter("rut");
-            String nombre = request.getParameter("nombre");
-            String apellido = request.getParameter("apellido");
-            String email = request.getParameter("email");
-            String contrasena = request.getParameter("contrasena");
-
-            String activoS = request.getParameter("activo");
-            boolean activo;
-            if( activoS == null ) {
-                activo = false;
-            } else {
-                activo = true;
-            }
-            
-            
-            
-            
-            //Si esque el parametro ingresado es null 
-            String telefonoS = request.getParameter("telefono");
-            Integer telefono;
-            if( !telefonoS.isEmpty() ) {
-                telefono = Integer.parseInt(telefonoS.replace(" ", ""));
-            } else {
-                telefono =  null;
-            }    
-
-            String tipoUsuarioS = request.getParameter("tipoUsuario");
-            Integer tipoUsuario = Integer.parseInt(tipoUsuarioS);
-
-            String sedeS = request.getParameter("sede");
-            Integer sede = Integer.parseInt(sedeS);
-
-            //Si esque el parametro ingresado es null 
-            String puntoVentaS = request.getParameter("puntoVenta");
-            Integer puntoVenta;
-            if ( puntoVentaS!="0" ) {
-                puntoVenta = Integer.parseInt(puntoVentaS);
-            } else {
-                puntoVenta =  null;
-            }
-    
-            
-            //-------------------------- INSTANCIANDO LOS PARAMETROS OBTENIDOS ------------------------
             HttpSession sesion = request.getSession();
             Usuario us = (Usuario) sesion.getAttribute("usuario");
+            String email = request.getParameter("email");
+            if (servicioUsuarios.buscarCorreo(email)==null || servicioUsuarios.buscarCorreo(email)==us.getIdUsuario())
+            {
+                String rut = request.getParameter("rut");
+                String nombre = request.getParameter("nombre");
+                String apellido = request.getParameter("apellido");
+                String contrasena = request.getParameter("contrasena");
+                String activoS = request.getParameter("activo");
+                boolean activo;
+                if( activoS == null ) {
+                    activo = false;
+                } else {
+                    activo = true;
+                }
+                //Si esque el parametro ingresado es null 
+                String telefonoS = request.getParameter("telefono");
+                Integer telefono;
+                if( !telefonoS.isEmpty() ) {
+                    telefono = Integer.parseInt(telefonoS.replace(" ", ""));
+                } else {
+                    telefono =  null;
+                }    
 
-            
-            //Comprueba que el id entregado exista en la base de datos
-            TipoUsuarioDAO tDAO = new TipoUsuarioDAO();
-            TipoUsuario tp  = new TipoUsuario();
-            TipoUsuario tp1 = new TipoUsuario();
-            if ( tDAO.existeIdTipoUsuario(tipoUsuario) ) { 
-                tp.setIdTipoUsuario(tipoUsuario);
-                tp1 = tDAO.buscarTipoUsuarioPorId(tp);
-            } else {
-             //tp.setIdTipoUsuario(3);                      //por el momento si no existe lo deja como colaborador
-             //tp1 = tDAO.buscarTipoUsuarioPorId(tp); 
-               throw new Exception();                      //Otra opcion es lanzar la exception
-            }
+                String tipoUsuarioS = request.getParameter("tipoUsuario");
+                Integer tipoUsuario = Integer.parseInt(tipoUsuarioS);
 
-            
-            
-            SedeDAO sDAO = new SedeDAO();
-            Sede s = new Sede();
-            Sede s1 = new Sede();
-            if ( sDAO.existeIdSede(sede) ) {
-                s.setIdSede(sede);
-                s1 = sDAO.buscarSedePorId(s);
-            }else {
-                throw new Exception();                    
-            }
-            
-            
-            
-            
-            //Si esque el punto de venta es null 
-            if( puntoVenta != null ) {
-                PuntoVenta pv = new PuntoVenta();
-                pv.setIdPuntoVenta(puntoVenta);
-                PuntoVentaDAO pDAO = new PuntoVentaDAO();
-                PuntoVenta pv1 = pDAO.buscarPuntoVentaPorId(pv);
-                us.setPuntoVenta(pv1);
-            } else {
-                us.setPuntoVenta(null);
-            }
+                String sedeS = request.getParameter("sede");
+                Integer sede = Integer.parseInt(sedeS);
+
+                //Si esque el parametro ingresado es null 
+                String puntoVentaS = request.getParameter("puntoVenta");
+                Integer puntoVenta;
+                if ( puntoVentaS!="0" ) {
+                    puntoVenta = Integer.parseInt(puntoVentaS);
+                } else {
+                    puntoVenta =  null;
+                }
+                //-------------------------- INSTANCIANDO LOS PARAMETROS OBTENIDOS ------------------------
+                //Comprueba que el id entregado exista en la base de datos
+                TipoUsuarioDAO tDAO = new TipoUsuarioDAO();
+                TipoUsuario tp  = new TipoUsuario();
+                TipoUsuario tp1 = new TipoUsuario();
+                if ( tDAO.existeIdTipoUsuario(tipoUsuario) ) { 
+                    tp.setIdTipoUsuario(tipoUsuario);
+                    tp1 = tDAO.buscarTipoUsuarioPorId(tp);
+                } else {
+                 //tp.setIdTipoUsuario(3);                      //por el momento si no existe lo deja como colaborador
+                 //tp1 = tDAO.buscarTipoUsuarioPorId(tp); 
+                   throw new Exception();                      //Otra opcion es lanzar la exception
+                }
 
 
-            //Si el telefono es null
-            if( telefono != null ) {
-                us.setTelefono(telefono);
-            }else {
-                us.setTelefono(null);
-            }
 
-            us.setRut(rut);
-            us.setNombre(nombre);
-            us.setApellido(apellido);
-            us.setEmail(email);
-            if(contrasena.length()>0){
-                us.setContrasena(ServicioPasswordHash.PasswordHashing(contrasena));
-            }
-            us.setActivo(activo);
-            us.setTipoUsuario(tp1);
-            us.setSede(s1);
+                SedeDAO sDAO = new SedeDAO();
+                Sede s = new Sede();
+                Sede s1 = new Sede();
+                if ( sDAO.existeIdSede(sede) ) {
+                    s.setIdSede(sede);
+                    s1 = sDAO.buscarSedePorId(s);
+                }else {
+                    throw new Exception();                    
+                }
+                //Si esque el punto de venta es null 
+                if( puntoVenta != null ) {
+                    PuntoVenta pv = new PuntoVenta();
+                    pv.setIdPuntoVenta(puntoVenta);
+                    PuntoVentaDAO pDAO = new PuntoVentaDAO();
+                    PuntoVenta pv1 = pDAO.buscarPuntoVentaPorId(pv);
+                    us.setPuntoVenta(pv1);
+                } else {
+                    us.setPuntoVenta(null);
+                }
+                //Si el telefono es null
+                if( telefono != null ) {
+                    us.setTelefono(telefono);
+                }else {
+                    us.setTelefono(null);
+                }
+                us.setRut(rut);
+                us.setNombre(nombre);
+                us.setApellido(apellido);
+                us.setEmail(email);
+                if(contrasena.length()>0){
+                    /*us.setContrasena(ServicioPasswordHash.PasswordHashing(contrasena));*/
+                    us.setContrasena(contrasena);
+                }
+                us.setActivo(activo);
+                us.setTipoUsuario(tp1);
+                us.setSede(s1);
 
-            String msj = servicioUsuarios.guardarUsuario(us); 
-            if (msj!="") {
-                request.setAttribute("errorVal", true);
-                request.setAttribute("msj", msj);
-            }else{
-                request.setAttribute("errorVal", false);
-                request.setAttribute("msj", "El USUARIO se ha modificado correctamente.");
-                
-                /*----------AGREGAR AL HISTORIAL----------*/
-                ServiciosHistorialesAdmin sh = new ServiciosHistorialesAdmin();
-                Usuario userH = (Usuario) sess.getAttribute("logged");
-                String tablaH = "Usuario";
-                String accionH = "Modificar";
-                String registroH = "ID:"+us.getIdUsuario()+", Nombre:"+us.getNombre()+" "+us.getApellido();
-                sh.guardarHistorialAdmin(userH, tablaH, accionH, registroH);
-                
-            }
-            System.out.println("Usuario Modificado");
-            sesion.removeAttribute("usuario");
-            } else {
-                //caso de eliminar
-                String idUsuarioS = request.getParameter("idUsuario");
-                Integer idUsuario = Integer.parseInt(idUsuarioS);
-                
-                Usuario usuario = new Usuario(idUsuario);
-                Usuario uh = servicioUsuarios.encontrarUsuario(usuario);
-                String nombreH = uh.getNombre()+" "+uh.getApellido();
-                String msj = servicioUsuarios.eliminarUsuario(usuario);
+                String msj = servicioUsuarios.guardarUsuario(us); 
                 if (msj!="") {
                     request.setAttribute("errorVal", true);
-                    request.setAttribute("msj", "El USUARIO no se ha podido eliminar, revise que no tenga ningún PEDIDO que dependa de este. De lo contrario, opte por desactivarlo.");
+                    request.setAttribute("msj", msj);
                 }else{
                     request.setAttribute("errorVal", false);
-                    request.setAttribute("msj", "El USUARIO se ha eliminado correctamente.");
-                    
+                    request.setAttribute("msj", "El USUARIO se ha modificado correctamente.");
+
                     /*----------AGREGAR AL HISTORIAL----------*/
                     ServiciosHistorialesAdmin sh = new ServiciosHistorialesAdmin();
                     Usuario userH = (Usuario) sess.getAttribute("logged");
                     String tablaH = "Usuario";
-                    String accionH = "Eliminar";
-                    String registroH = "ID:"+usuario.getIdUsuario()+", Nombre:"+nombreH;
+                    String accionH = "Modificar";
+                    String registroH = "ID:"+us.getIdUsuario()+", Nombre:"+us.getNombre()+" "+us.getApellido();
                     sh.guardarHistorialAdmin(userH, tablaH, accionH, registroH);
+
                 }
+                System.out.println("Usuario Modificado");
+                sesion.removeAttribute("usuario");
+            }else{
+                request.setAttribute("errorVal", true);
+                request.setAttribute("msj", "El USUARIO no se ha podido actualizar, El correo que intenta ingresar ya existe.");
             }
+        } else {
+            //caso de eliminar
+            String idUsuarioS = request.getParameter("idUsuario");
+            Integer idUsuario = Integer.parseInt(idUsuarioS);
+
+            Usuario usuario = new Usuario(idUsuario);
+            Usuario uh = servicioUsuarios.encontrarUsuario(usuario);
+            String nombreH = uh.getNombre()+" "+uh.getApellido();
+            String msj = servicioUsuarios.eliminarUsuario(usuario);
+            if (msj!="") {
+                request.setAttribute("errorVal", true);
+                request.setAttribute("msj", "El USUARIO no se ha podido eliminar, revise que no tenga ningún PEDIDO que dependa de este. De lo contrario, opte por desactivarlo.");
+            }else{
+                request.setAttribute("errorVal", false);
+                request.setAttribute("msj", "El USUARIO se ha eliminado correctamente.");
+
+                /*----------AGREGAR AL HISTORIAL----------*/
+                ServiciosHistorialesAdmin sh = new ServiciosHistorialesAdmin();
+                Usuario userH = (Usuario) sess.getAttribute("logged");
+                String tablaH = "Usuario";
+                String accionH = "Eliminar";
+                String registroH = "ID:"+usuario.getIdUsuario()+", Nombre:"+nombreH;
+                sh.guardarHistorialAdmin(userH, tablaH, accionH, registroH);
+            }
+        }
     } catch(Exception e ){
         e.printStackTrace(); 
         //Esta opcion de redireccionar, puede ser cambiada a otra como un mensaje de alerta en pantalla

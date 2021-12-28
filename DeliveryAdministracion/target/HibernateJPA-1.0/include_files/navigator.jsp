@@ -56,10 +56,10 @@
                 <a class="nav-link dropdown-toggle px-3 py-3" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="bi bi-person-circle"> </i>${sessionScope.logged.nombre}
                 </a>
-                <div class="dropdown-menu dropdown-menu-right text-white p-3" aria-labelledby="navbarDropdown">
+                <div class="dropdown-menu dropdown-menu-right text-white p-3" aria-labelledby="navbarDropdown" style="min-width: 280px;max-width: 340px;">
                     <h4 class="text-center pt-0">${sessionScope.logged.nombre} ${sessionScope.logged.apellido}</h4>
-                    <h6 class="text-center font-weight-light">${sessionScope.logged.email}</h6>
-                    <h6 class="font-weight-light">${sessionScope.logged.sede.nombreSede}</h6>
+                    <h6 class="text-left font-weight-light">${sessionScope.logged.email}</h6>
+                    <h6 class="text-left font-weight-light">${sessionScope.logged.sede.nombreSede}</h6>
                     <hr class="my-1">
                     <a data-toggle="modal" data-target="#confirmLogOut" class="w-100 text-center btn bg-danger text-white rounded font-weight-normal" href="#" style="font-size: .8rem; padding-left: 4px; padding-right: 4px;">
                         <i class="bi bi-box-arrow-right"> </i>Salir

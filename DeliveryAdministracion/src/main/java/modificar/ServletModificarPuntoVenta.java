@@ -8,10 +8,8 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.nio.file.Path;
 import java.nio.file.Paths;
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
-import java.util.Calendar;
-import java.util.Date;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.MultipartConfig;
@@ -178,7 +176,11 @@ public class ServletModificarPuntoVenta extends HttpServlet{
         try{
             
             archivo = request.getPart("imagen");
-            fileName = archivo.getSubmittedFileName();
+            DateTimeFormatter dtf = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");  
+            LocalDateTime now = LocalDateTime.now();
+            Usuario usr = (Usuario) sess.getAttribute("logged");
+            fileName = "IMGPVENTA"+usr.getIdUsuario()+dtf.format(now)+archivo.getSubmittedFileName().substring(archivo.getSubmittedFileName().lastIndexOf("."));
+            /*String fileName = archivo.getSubmittedFileName();*/
             //lo transforma en una cadena de datos
             InputStream is = archivo.getInputStream();
             //crea un archivo en la locacion indicada.

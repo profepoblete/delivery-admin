@@ -1,14 +1,9 @@
 package dao;
 
-import com.mysql.cj.xdevapi.SessionFactory;
 import modelo.TipoUsuario;
 import modelo.Usuario;
 import java.util.*;
 import javax.persistence.*;
-import javax.persistence.criteria.*;
-import javax.security.auth.login.Configuration;
-import org.junit.platform.commons.util.CollectionUtils;
-import dao.HistorialAdminDAO;
 
 public class UsuarioDAO extends GenericDAO {
 
@@ -81,7 +76,7 @@ public class UsuarioDAO extends GenericDAO {
         Usuario user = new Usuario();
         Integer idUser = null;
         for (Usuario u : lista) {
-            if (u.getEmail().trim().equals(email.trim())) {
+            if (u.getEmail().toUpperCase().trim().equals(email.toUpperCase().trim())) {
                 idUser = u.getIdUsuario();
             }
         }
