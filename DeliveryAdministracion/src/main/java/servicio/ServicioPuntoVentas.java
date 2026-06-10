@@ -14,7 +14,10 @@ public class ServicioPuntoVentas {
         return this.puntoVentaDAO.listar();
     }
     
-    
+    public void hola()
+    {
+        System.out.println("HOLA");
+    }
     public String guardarPuntoVenta(PuntoVenta puntoVenta){
         if( puntoVenta != null && puntoVenta.getIdPuntoVenta() == null){
             return puntoVentaDAO.insertar(puntoVenta);

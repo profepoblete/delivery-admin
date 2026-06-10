@@ -12,7 +12,10 @@ public class ServicioUsuarios{
         return this.usuarioDAO.listar();
     }
     
-    
+    public void chao()
+    {
+        System.out.println("CHAO!!");
+    }
     public String guardarUsuario(Usuario usuario){
         if( usuario != null && usuario.getIdUsuario() == null){
             return usuarioDAO.insertar(usuario);
